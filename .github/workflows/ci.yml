@@ -1,0 +1,55 @@
+name: Labki Runtime CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Check file structure
+        run: |
+          if [ ! -f config/secrets.env.example ]; then echo "Missing secrets example"; exit 1; fi
+          if [ ! -f config/LocalSettings.user.php.example ]; then echo "Missing config example"; exit 1; fi
+          if [ ! -f docker-compose.yml ]; then echo "Missing docker-compose.yml"; exit 1; fi
+
+      - name: Validate Docker Compose
+        run: docker compose config
+
+  smoke-test:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure Secrets
+        run: cp config/secrets.env.example config/secrets.env
+
+      - name: Start Labki
+        run: ./update.sh
+
+      - name: Wait for Wiki to be ready
+        run: |
+          echo "Waiting for wiki to respond..."
+          timeout=30
+          counter=0
+          until curl -s -f -I http://localhost:8080/wiki/Main_Page | grep "HTTP/1.1 200 OK"; do
+            sleep 5
+            ((counter++))
+            if [ $counter -ge $timeout ]; then
+              echo "Timed out waiting for wiki"
+              exit 1
+            fi
+            echo "Waiting... ($counter/$timeout)"
+          done
+          echo "Wiki is UP!"
+
+      - name: Dump logs on failure
+        if: failure()
+        run: docker compose logs wiki
