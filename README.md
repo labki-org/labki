@@ -58,6 +58,11 @@ The Labki Platform comes with many bundled extensions. To add your own:
    ```bash
    docker compose restart wiki
    ```
+## Versioning
+
+This project follows [Semantic Versioning](https://semver.org/).
+- **Releases**: Created automatically when a `vX.Y.Z` tag is pushed.
+- **Compatibility**: The runtime version is independent of the `labki-platform` image version.
 
 ## Upgrading
 
