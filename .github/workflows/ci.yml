@@ -19,6 +19,9 @@ jobs:
           if [ ! -f config/LocalSettings.user.php.example ]; then echo "Missing config example"; exit 1; fi
           if [ ! -f docker-compose.yml ]; then echo "Missing docker-compose.yml"; exit 1; fi
 
+      - name: Configure Secrets
+        run: cp config/secrets.env.example config/secrets.env
+
       - name: Validate Docker Compose
         run: docker compose config
 
