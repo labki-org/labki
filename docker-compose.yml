@@ -1,0 +1,48 @@
+services:
+  db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    env_file:
+      - config/secrets.env
+    environment:
+      MARIADB_DATABASE: ${MW_DB_NAME:-labki}
+      MARIADB_USER: ${MW_DB_USER:-labki}
+      MARIADB_PASSWORD: ${MW_DB_PASSWORD:-labki_pass}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-root_pass}
+    volumes:
+      - db-data:/var/lib/mysql
+
+  wiki:
+    image: ghcr.io/labki-org/labki-platform:main
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    env_file:
+      - config/secrets.env
+    environment:
+      MW_DB_HOST: db
+    volumes:
+      - ./config:/mw-config
+      - ./images:/var/www/html/images
+      - ./mw-user-extensions:/mw-user-extensions
+    depends_on:
+      - db
+
+  wiki-jobrunner:
+    image: ghcr.io/labki-org/labki-platform:main
+    restart: unless-stopped
+    env_file:
+      - config/secrets.env
+    environment:
+      MW_DB_HOST: db
+    volumes:
+      - ./config:/mw-config
+      - ./images:/var/www/html/images
+      - ./mw-user-extensions:/mw-user-extensions
+    depends_on:
+      - db
+      - wiki
+    command: [ "/opt/labki/scripts/run-jobrunner.sh" ]
+
+volumes:
+  db-data:

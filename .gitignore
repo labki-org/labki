@@ -1,0 +1,14 @@
+# Configuration secrets
+config/secrets.env
+
+# User data (exclude content but keep folders via .gitkeep)
+images/*
+!images/.gitkeep
+mw-user-extensions/*
+!mw-user-extensions/.gitkeep
+data/*
+!data/README.md
+
+# IDE
+.idea
+.vscode

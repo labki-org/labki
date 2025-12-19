@@ -1,0 +1,15 @@
+services:
+  db:
+    profiles: [ "disabled" ]
+
+  wiki:
+    environment:
+      # Pass through external DB host from secrets
+      MW_DB_HOST: ${MW_DB_HOST}
+    depends_on: [] # Remove dependency on the internal db service
+
+  wiki-jobrunner:
+    environment:
+      MW_DB_HOST: ${MW_DB_HOST}
+    depends_on:
+      - wiki
