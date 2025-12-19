@@ -51,7 +51,7 @@ jobs:
               exit 0
             fi
             sleep 5
-            ((counter++))
+            counter=$((counter + 1))
             echo "Waiting... ($counter/$timeout) - Status: $status"
           done
           echo "Timed out waiting for wiki"
