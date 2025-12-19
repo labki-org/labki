@@ -35,7 +35,9 @@ jobs:
         run: cp config/secrets.env.example config/secrets.env
 
       - name: Start Labki
-        run: ./update.sh
+        run: |
+          chmod +x update.sh
+          ./update.sh
 
       - name: Wait for Wiki to be ready
         run: |
