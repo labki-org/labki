@@ -45,13 +45,14 @@ jobs:
           timeout=120
           counter=0
           while [ $counter -lt $timeout ]; do
-            if curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/wiki/Main_Page | grep -q "200"; then
+            status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/wiki/Main_Page || echo "000")
+            if [ "$status" == "200" ]; then
               echo "Wiki is UP!"
               exit 0
             fi
             sleep 5
             ((counter++))
-            echo "Waiting... ($counter/$timeout)"
+            echo "Waiting... ($counter/$timeout) - Status: $status"
           done
           echo "Timed out waiting for wiki"
           exit 1
