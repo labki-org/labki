@@ -63,6 +63,12 @@ The Labki Platform comes with many bundled extensions. To add your own:
 
 To upgrade the Labki Platform (get new MediaWiki versions, security fixes, and bundled extension updates):
 
+Run the automated update script:
+```bash
+./update.sh
+```
+
+Or manually:
 ```bash
 # 1. Update this repository (for new config defaults)
 git pull
@@ -73,6 +79,18 @@ docker compose pull
 # 3. Recreate containers (your data is safe!)
 docker compose up -d
 ```
+
+## Version Pinning
+
+To pin your wiki to a specific version of the Labki Platform (e.g., for stability):
+
+1.  Copy `.env.example` to `.env`.
+2.  Uncomment `LABKI_VERSION` and set it to your desired tag.
+    ```ini
+    LABKI_VERSION=1.39.5
+    ```
+3.  Restart containers: `./update.sh`
+
 
 ## Advanced: External Database
 
@@ -99,3 +117,8 @@ View logs for debugging:
 ```bash
 docker compose logs -f wiki
 ```
+
+### Windows Line Endings (CRLF)
+If containers crash with `command not found` or `\r` errors in logs:
+Run `dos2unix config/secrets.env` or `sed -i 's/\r$//' config/secrets.env` to fix Windows line endings.
+

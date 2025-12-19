@@ -13,7 +13,7 @@ services:
       - db-data:/var/lib/mysql
 
   wiki:
-    image: ghcr.io/labki-org/labki-platform:main
+    image: ghcr.io/labki-org/labki-platform:${LABKI_VERSION:-latest}
     restart: unless-stopped
     ports:
       - "8080:80"
@@ -29,7 +29,7 @@ services:
       - db
 
   wiki-jobrunner:
-    image: ghcr.io/labki-org/labki-platform:main
+    image: ghcr.io/labki-org/labki-platform:${LABKI_VERSION:-latest}
     restart: unless-stopped
     env_file:
       - config/secrets.env
