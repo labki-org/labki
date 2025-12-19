@@ -44,7 +44,7 @@ jobs:
           echo "Waiting for wiki to respond..."
           timeout=30
           counter=0
-          until curl -s -f -I http://localhost:8080/wiki/Main_Page | grep "HTTP/1.1 200 OK"; do
+          until curl -s -I http://localhost:8080/wiki/Main_Page | grep "HTTP/1.1 200 OK"; do
             sleep 5
             ((counter++))
             if [ $counter -ge $timeout ]; then
