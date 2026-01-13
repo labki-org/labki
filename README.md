@@ -39,14 +39,41 @@ Open [http://localhost:8080](http://localhost:8080) in your browser.
 
 ## Configuration
 
+> [!CAUTION]
+> **Never edit `/var/www/html/LocalSettings.php` inside the container!** This file is auto-generated and will be overwritten on restart. Always edit `config/LocalSettings.user.php` instead.
+
+### File Overview
+
+| File | Purpose | Edit This? |
+|------|---------|------------|
+| `config/secrets.env` | Passwords, DB credentials, site identity | ✅ Yes |
+| `config/LocalSettings.user.php` | MediaWiki settings, extensions, overrides | ✅ Yes |
+| `LocalSettings.php` (in container) | Auto-generated loader | ❌ Never |
+
 ### Site & Database
+
 Edit `config/secrets.env` to change:
 - Site Name and Language
 - Database credentials
 - Admin account initial password
 
 ### MediaWiki Settings
-Edit `config/LocalSettings.user.php` to add custom MediaWiki configuration. This file is loaded *after* the platform defaults, allowing you to override almost anything.
+
+Edit `config/LocalSettings.user.php` to customize MediaWiki. This file is loaded **last**, giving it the highest precedence to override any platform defaults.
+
+```php
+<?php
+// Example: Allow logged-in users to edit
+$wgGroupPermissions['user']['edit'] = true;
+
+// Example: Change the logo
+$wgLogo = "/images/my-logo.png";
+```
+
+Most changes take effect immediately. Restart only if loading new extensions:
+```bash
+docker compose restart wiki
+```
 
 ## Managing Extensions
 
