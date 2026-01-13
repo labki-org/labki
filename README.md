@@ -37,6 +37,44 @@ docker compose up -d
 
 Open [http://localhost:8080](http://localhost:8080) in your browser.
 
+## Production Deployment with HTTPS
+
+For production deployments, use the included Caddy reverse proxy for automatic HTTPS:
+
+### 1. Configure Your Domain
+
+Set your domain in the `.env` file:
+```bash
+cp .env.example .env
+# Edit .env and set:
+SITE_DOMAIN=labki.org
+```
+
+Also update `config/secrets.env` to set `MW_SERVER` to your full URL:
+```bash
+MW_SERVER=https://labki.org
+```
+
+### 2. Start with Caddy
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d
+```
+
+Caddy will automatically:
+- Obtain a Let's Encrypt TLS certificate for your domain
+- Redirect HTTP → HTTPS
+- Renew certificates before expiry
+
+> [!IMPORTANT]
+> Ensure your domain's DNS A record points to your server's IP address, and that ports 80 and 443 are open in your firewall.
+
+### 3. DNS & Firewall Checklist
+
+- [ ] DNS A record for `your-domain.com` → `<your-server-ip>`
+- [ ] Firewall allows inbound TCP 80 (HTTP) and 443 (HTTPS)
+- [ ] If using a cloud provider, security group allows 80/443
+
 ## Configuration
 
 > [!CAUTION]
@@ -129,9 +167,10 @@ docker compose up -d
 To pin your wiki to a specific version of the Labki Platform (e.g., for stability):
 
 1.  Copy `.env.example` to `.env`.
-2.  Uncomment `LABKI_VERSION` and set it to your desired tag.
+2.  Set your desired version and domain (if using Caddy):
     ```ini
     LABKI_VERSION=1.39.5
+    SITE_DOMAIN=labki.org
     ```
 3.  Restart containers: `./update.sh`
 

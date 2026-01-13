@@ -1,0 +1,35 @@
+# Labki Caddyfile
+# Caddy automatically provisions and renews HTTPS certificates via Let's Encrypt.
+#
+# Usage:
+#   Set SITE_DOMAIN in your environment or .env file, then run:
+#   docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d
+#
+# For local development without HTTPS, use:
+#   SITE_DOMAIN=localhost docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d
+
+{$SITE_DOMAIN:localhost} {
+    reverse_proxy wiki:80
+
+    # Recommended headers for MediaWiki
+    header {
+        # Security headers
+        X-Content-Type-Options nosniff
+        X-Frame-Options SAMEORIGIN
+        Referrer-Policy strict-origin-when-cross-origin
+        
+        # Remove server identification
+        -Server
+    }
+
+    # Enable gzip compression
+    encode gzip
+
+    # Logging (optional - comment out to reduce disk usage)
+    log {
+        output file /data/access.log {
+            roll_size 10mb
+            roll_keep 5
+        }
+    }
+}

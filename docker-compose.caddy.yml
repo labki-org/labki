@@ -1,0 +1,32 @@
+# Docker Compose override for Caddy reverse proxy with automatic HTTPS
+#
+# Usage:
+#   SITE_DOMAIN=your-domain.com docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d
+#
+# Or set SITE_DOMAIN in your .env file and run:
+#   docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d
+
+services:
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"  # HTTP/3 support
+    environment:
+      - SITE_DOMAIN=${SITE_DOMAIN:-localhost}
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - wiki
+
+  wiki:
+    # Override to remove external port exposure - Caddy handles all traffic
+    ports: !reset []
+
+volumes:
+  caddy-data:
+  caddy-config:
