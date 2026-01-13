@@ -1,5 +1,8 @@
 # Labki Runtime
 
+[![CI](https://github.com/labki-org/labki/actions/workflows/ci.yml/badge.svg)](https://github.com/labki-org/labki/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/labki-org/labki)](LICENSE)
+
 Welcome to the Labki MediaWiki runtime repository. This repository allows you to run a production-ready MediaWiki instance using the Labki Platform Docker images.
 
 **Core Philosophy:**
@@ -8,22 +11,31 @@ Welcome to the Labki MediaWiki runtime repository. This repository allows you to
 
 ## Quick Start
 
-1. **Configure Secrets**
-   Copy the example secrets file and edit it to set your admin password and site name.
-   ```bash
-   cp config/secrets.env.example config/secrets.env
-   # Edit the file with your favorite editor
-   # nano config/secrets.env
-   ```
+### 1. Configure Secrets
 
-2. **Start the Wiki**
-   Run the following command to start MediaWiki and the bundled MariaDB database.
-   ```bash
-   docker compose up -d
-   ```
+> [!CAUTION]
+> **Never commit secrets.env to git!** It contains passwords and is gitignored by default.
 
-3. **Access**
-   Open [http://localhost:8080](http://localhost:8080) in your browser.
+```bash
+cp config/secrets.env.example config/secrets.env
+```
+
+Edit `config/secrets.env` and **change all passwords**:
+- `MW_ADMIN_PASS` - Your wiki admin password
+- `MW_DB_PASSWORD` - Database access password
+- `MARIADB_ROOT_PASSWORD` - Database root password
+
+Generate secure passwords with: `openssl rand -base64 24`
+
+### 2. Start the Wiki
+
+```bash
+docker compose up -d
+```
+
+### 3. Access
+
+Open [http://localhost:8080](http://localhost:8080) in your browser.
 
 ## Configuration
 
@@ -127,3 +139,11 @@ docker compose logs -f wiki
 If containers crash with `command not found` or `\r` errors in logs:
 Run `dos2unix config/secrets.env` or `sed -i 's/\r$//' config/secrets.env` to fix Windows line endings.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## Resources
+
+- [Changelog](CHANGELOG.md) - Release history
+- [Labki Platform](https://github.com/labki-org/labki-platform) - Source for the Docker image

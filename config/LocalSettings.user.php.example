@@ -1,14 +1,17 @@
 <?php
-
-// LocalSettings.user.php
-// ----------------------
-// This file is the LAST file loaded by MediaWiki. 
-// Use it to override any defaults, add secrets, or configure extensions.
-//
-// This file is NOT overwritten on upgrades. It is yours to keep.
+/**
+ * LocalSettings.user.php
+ * ======================
+ * This file is loaded LAST by MediaWiki, giving you full control.
+ * Use it to override platform defaults, add secrets, or configure extensions.
+ *
+ * This file survives upgrades and is yours to customize.
+ *
+ * Copy this file to LocalSettings.user.php to enable customization.
+ */
 
 if ( !defined( 'MEDIAWIKI' ) ) {
-	exit;
+    exit;
 }
 
 // ----------------------
@@ -22,7 +25,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 // 2. Permissions
 // ----------------------
 
-// Allow users to edit? (Default is false in Labki Platform)
+// Default: Anonymous users cannot edit
 // $wgGroupPermissions['*']['edit'] = true;
 
 // Allow account creation?
@@ -32,12 +35,10 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 // 3. Uploads
 // ----------------------
 
-// Uploads are enabled by default in the platform.
-// $wgUploadDirectory is set to /var/www/html/images (mounted vol).
-
+// Uploads are enabled by default.
 // To allow more file types:
 // $wgFileExtensions = array_merge( $wgFileExtensions, [
-//     'pdf', 'svg', 'docx' 
+//     'pdf', 'svg', 'docx'
 // ] );
 
 // ----------------------
@@ -49,14 +50,14 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 // wfLoadExtension( 'CodeEditor' );
 
 // B) Enable User-Mounted Extensions (in mw-user-extensions/ folder)
-// To use these, you must first clone the extension code into 'mw-user-extensions/MyExtension'.
-// Then load it by pointing to the extension.json file:
+// First clone the extension: git clone <url> mw-user-extensions/MyExtension
+// Then load it:
 // wfLoadExtension( 'MyExtension', '/mw-user-extensions/MyExtension/extension.json' );
 
 // ----------------------
-// 5. Debugging
+// 5. Production Settings
 // ----------------------
 
-// Uncomment to see errors on screen (NOT for production!)
+// IMPORTANT: Keep these disabled in production!
 // $wgShowExceptionDetails = true;
-// $wgUploadMaintenance = true; // Use if you hit upload size limits in dev
+// $wgShowDBErrorBacktrace = true;

@@ -1,11 +1,14 @@
 # Configuration secrets
 config/secrets.env
+.env
 
 # User data (exclude content but keep folders via .gitkeep)
 images/*
 !images/.gitkeep
 mw-user-extensions/*
 !mw-user-extensions/.gitkeep
+mw-user-skins/*
+!mw-user-skins/.gitkeep
 data/*
 !data/README.md
 
