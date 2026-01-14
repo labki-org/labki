@@ -23,10 +23,6 @@ services:
     depends_on:
       - wiki
 
-  wiki:
-    # Override to remove external port exposure - Caddy handles all traffic
-    ports: !reset []
-
 volumes:
   caddy-data:
   caddy-config:

@@ -27,15 +27,18 @@ Edit `config/secrets.env` and **change all passwords**:
 
 Generate secure passwords with: `openssl rand -base64 24`
 
-### 2. Start the Wiki
+### 2. Start the Wiki (Local Development)
 
 ```bash
-docker compose up -d
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
 ### 3. Access
 
 Open [http://localhost:8080](http://localhost:8080) in your browser.
+
+> [!NOTE]
+> The base `docker-compose.yml` does not expose any ports (production-safe). Use `docker-compose.dev.yml` for local development or `docker-compose.caddy.yml` for production HTTPS.
 
 ## Production Deployment with HTTPS
 

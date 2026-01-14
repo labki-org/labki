@@ -11,8 +11,8 @@ services:
   wiki:
     image: ghcr.io/labki-org/labki-platform:${LABKI_VERSION:-latest}
     restart: unless-stopped
-    ports:
-      - "8080:80"
+    # No ports exposed by default (production-safe)
+    # Use docker-compose.dev.yml for local access, or docker-compose.caddy.yml for HTTPS
     env_file:
       - config/secrets.env
     environment:

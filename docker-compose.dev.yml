@@ -1,0 +1,11 @@
+# Docker Compose override for local development
+#
+# Exposes the wiki on http://localhost:8080 for direct access without Caddy.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+services:
+  wiki:
+    ports:
+      - "8080:80"
