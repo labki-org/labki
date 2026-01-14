@@ -36,8 +36,8 @@ jobs:
 
       - name: Start Labki
         run: |
-          chmod +x update.sh
-          ./update.sh
+          docker compose -f docker-compose.yml -f docker-compose.dev.yml pull
+          docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
       - name: Wait for Wiki to be ready
         run: |
@@ -59,4 +59,4 @@ jobs:
 
       - name: Dump logs on failure
         if: failure()
-        run: docker compose logs wiki
+        run: docker compose -f docker-compose.yml -f docker-compose.dev.yml logs wiki
