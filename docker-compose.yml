@@ -4,11 +4,7 @@ services:
     restart: unless-stopped
     env_file:
       - config/secrets.env
-    environment:
-      MARIADB_DATABASE: ${MW_DB_NAME:-labki}
-      MARIADB_USER: ${MW_DB_USER:-labki}
-      MARIADB_PASSWORD: ${MW_DB_PASSWORD:-labki_pass}
-      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-root_pass}
+    # MARIADB_* variables are read directly from secrets.env
     volumes:
       - db-data:/var/lib/mysql
 

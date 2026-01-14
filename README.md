@@ -22,7 +22,7 @@ cp config/secrets.env.example config/secrets.env
 
 Edit `config/secrets.env` and **change all passwords**:
 - `MW_ADMIN_PASS` - Your wiki admin password
-- `MW_DB_PASSWORD` - Database access password
+- `MW_DB_PASSWORD` and `MARIADB_PASSWORD` - Database access password (must match!)
 - `MARIADB_ROOT_PASSWORD` - Database root password
 
 Generate secure passwords with: `openssl rand -base64 24`
