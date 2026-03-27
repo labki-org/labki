@@ -2,6 +2,11 @@ services:
   db:
     image: mariadb:10.11
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "25m"
+        max-file: "4"
     env_file:
       - config/secrets.env
     # MARIADB_* variables are read directly from secrets.env
@@ -11,6 +16,11 @@ services:
   wiki:
     image: ghcr.io/labki-org/labki-platform:${LABKI_VERSION:-latest}
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "25m"
+        max-file: "4"
     # No ports exposed by default (production-safe)
     # Use docker-compose.dev.yml for local access, or docker-compose.caddy.yml for HTTPS
     env_file:
@@ -28,6 +38,11 @@ services:
   wiki-jobrunner:
     image: ghcr.io/labki-org/labki-platform:${LABKI_VERSION:-latest}
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "25m"
+        max-file: "4"
     env_file:
       - config/secrets.env
     environment:
