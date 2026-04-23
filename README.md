@@ -178,6 +178,22 @@ To pin your wiki to a specific version of the Labki Platform (e.g., for stabilit
 3.  Restart containers: `./update.sh`
 
 
+## Performance & Scaling
+
+Labki's defaults are tuned for a single-host deployment serving ~10–1000 users/day. The important pieces:
+
+- **Main object cache — APCu (`$wgMainCacheType = CACHE_ACCEL`).** In-process PHP cache, shared across all Apache workers on the host. Backs MediaWiki's session/message caches and SMW's entity lookups.
+- **Parser cache — MariaDB (`$wgParserCacheType = CACHE_DB`).** Parsed wikitext is durable, survives container restarts, and is shared across web + jobrunner containers.
+- **Jobs — dedicated runner (`$wgJobRunRate = 0`).** The `wiki-jobrunner` container drains the queue continuously via `runJobs.php --wait`, so user-facing requests never pay the cost of a slow job. Monitor it with `docker compose logs -f wiki-jobrunner`; an unbounded queue means the runner is down or failing.
+- **Apache worker recycling — `MaxConnectionsPerChild 1000`.** Baked into the platform image. Bounds how long any single worker's in-process PHP state can accumulate; prevents stale in-memory caches (notably SMW's `CompositeCache`) from holding poisoned entries indefinitely. Don't set this to 0.
+- **PHP opcache + APCu sized for 256 MB each.** Also baked into the image.
+
+You shouldn't need to override any of these for a typical single-VPS install. If you do want to tune, see section 6 of `config/LocalSettings.user.php.example`.
+
+### Scaling past a single VPS
+
+If you split the wiki across multiple hosts (two web containers on different nodes, a separate DB, a read replica, etc.), you'll want the main cache to be shared rather than per-process. Switch `$wgMainCacheType` to `CACHE_MEMCACHED` and run a memcached (or Redis) service alongside the wiki — the example override is in section 6 of `LocalSettings.user.php.example`. The jobrunner container scales horizontally by adding more `wiki-jobrunner` replicas.
+
 ## Advanced: External Database
 
 To use an external database (e.g., AWS RDS) instead of the bundled MariaDB container:

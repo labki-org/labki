@@ -61,3 +61,29 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 // IMPORTANT: Keep these disabled in production!
 // $wgShowExceptionDetails = true;
 // $wgShowDBErrorBacktrace = true;
+
+// ----------------------
+// 6. Performance & Scaling
+// ----------------------
+
+// The platform image ships defaults tuned for a single VPS serving
+// ~10–1000 users/day: CACHE_ACCEL (APCu) for main/session/message
+// caches, CACHE_DB for ParserCache, and $wgJobRunRate = 0 (jobs run
+// in the dedicated `wiki-jobrunner` container). You shouldn't need to
+// change anything here for a typical single-host install.
+
+// If you scale past a single host, switch the main cache to a shared
+// backend so every web container (and the jobrunner) sees the same
+// cache state. Start a memcached service alongside the wiki in
+// docker-compose and point MediaWiki at it:
+// $wgMainCacheType = CACHE_MEMCACHED;
+// $wgMemCachedServers = [ 'memcached:11211' ];
+
+// If you disable the `wiki-jobrunner` container, re-enable inline
+// job draining so saves still process (at the cost of slower UX).
+// $wgJobRunRate = 1;
+
+// Large uploads — default PHP upload limit is 20 MB; bump if you need
+// bigger files. Requires matching php.ini upload_max_filesize /
+// post_max_size, which you can set via a bind-mounted php conf.d file.
+// $wgMaxUploadSize = 104857600; // 100 MB
